@@ -21,6 +21,7 @@ class Function:
 
 class Square(Function):
     def forward(self, x):
+        print(f'Square forward x: {x}, return: {x**2}')
         return x**2
     
     
@@ -41,6 +42,7 @@ class Square(Function):
 
 class Exp(Function):
     def forward(self, x):
+        print(f'Exp forward x: {x}, return: {np.exp(x)}')
         return np.exp(x)
     
     def backward(self, gy):
@@ -67,6 +69,7 @@ x = Variable(np.array(0.5))
 a = A(x)
 b = B(a)
 y = C(b)
+print()
 
 y.grad = np.array(1.0)
 b.grad = C.backward(y.grad)
