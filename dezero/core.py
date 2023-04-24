@@ -2,6 +2,7 @@ import numpy as np
 import unittest
 import weakref
 import contextlib
+import dezero
 
 # =============================================
 # Config
@@ -57,6 +58,10 @@ class Variable:
     def dtype(self):
         return self.data.dtype
 
+    @property
+    def T(self):
+        return dezero.functions.transpose(self)
+    
     def __len__(self):
         return len(self.data)
     
@@ -111,7 +116,15 @@ class Variable:
             if not retain_grad:
                 for y in f.outputs:
                     y().grad = None 
-
+                    
+    def reshape(self, *shape):
+        if len(shape) == 1 and isinstance(shape[0], (tuple, list)):
+            shape = shape[0]
+        return dezero.functions.reshape(self, shape)
+    
+    def transpose(self):
+        return dezero.functions.transpose(self)
+    
 def as_array(x):
     if np.isscalar(x):
         return np.array(x)
