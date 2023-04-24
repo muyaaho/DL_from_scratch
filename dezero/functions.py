@@ -95,15 +95,17 @@ def sum(x, axis = None, keepdims = False):
 class BroadcastTo(Function):
     def __init__(self, shape):
         self.shape = shape
-    
+
     def forward(self, x):
         self.x_shape = x.shape
+        # xp = dezero.cuda.get_array_m/odule(x)
         y = np.broadcast_to(x, self.shape)
         return y
 
     def backward(self, gy):
         gx = sum_to(gy, self.x_shape)
         return gx
+
 
 def broadcast_to(x, shape):
     if x.shape == shape:
@@ -116,7 +118,7 @@ class SumTo(Function):
     
     def forward(self, x):
         self.x_shape = x.shape
-        y = np.sum_to(x, self.shape)
+        y = utils.sum_to(x, self.shape)
         return y
 
     def backward(self, gy):
@@ -126,4 +128,4 @@ class SumTo(Function):
 def sum_to(x, shape):
     if x.shape == shape:
         return as_variable(x)
-    return BroadcastTo(shape)(x)
+    return SumTo(shape)(x)
